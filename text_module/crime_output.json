@@ -1,0 +1,19 @@
+{
+    "crime_type": "Unknown Crime",
+    "location": [
+        "road"
+    ],
+    "time": [],
+    "people": [],
+    "objects": {
+        "vehicle": [
+            "vehicle"
+        ]
+    },
+    "actions": {
+        "escape": [
+            "left"
+        ]
+    },
+    "original_description": "\"A hit-and-run accident occurred on a city road at 11:15 PM. A cyclist was found injured near a streetlight, and the vehicle involved had left the scene. Broken headlight pieces and tire marks were found on the road. A nearby CCTV camera was facing the accident location.\""
+}

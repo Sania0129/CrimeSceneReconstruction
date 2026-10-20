@@ -1,0 +1,61 @@
+{
+    "original_description": "A car collided with a motorcycle on a city road at night. The motorcycle was damaged, broken glass was scattered near the vehicles, and tire marks were visible on the road.",
+    "event": [],
+    "time": [
+        "night"
+    ],
+    "people": [],
+    "locations": [
+        "road"
+    ],
+    "text_objects": [
+        "car",
+        "motorcycle",
+        "night",
+        "glass",
+        "vehicles",
+        "tire"
+    ],
+    "image_objects": [
+        "potted plant",
+        "chair",
+        "vase"
+    ],
+    "combined_objects": [
+        "car",
+        "motorcycle",
+        "night",
+        "glass",
+        "vehicles",
+        "tire",
+        "potted plant",
+        "chair",
+        "vase"
+    ],
+    "actions": [
+        "collide",
+        "damage",
+        "scatter"
+    ],
+    "conditions": [
+        "damaged",
+        "broken"
+    ],
+    "evidence": [
+        "glass",
+        "tire"
+    ],
+    "relationships": [
+        {
+            "action": "damage",
+            "subject": "motorcycle",
+            "object": null
+        },
+        {
+            "action": "scatter",
+            "subject": "glass",
+            "object": null
+        }
+    ],
+    "image_name": "test_image.jpg"
+}

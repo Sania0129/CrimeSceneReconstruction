@@ -1,0 +1,35 @@
+Realistic forensic reconstruction of a
+crime scene.
+
+Scene location:
+school, building.
+
+Time:
+unspecified time.
+
+People involved:
+unspecified people.
+
+Important objects:
+windows, glass, floor, entrance.
+
+Actions:
+damage, find.
+
+Conditions:
+damaged, broken.
+
+Evidence visible at the scene:
+glass.
+
+Create a realistic crime-scene reconstruction based only on the
+information provided.
+
+Maintain logical spatial relationships between people, objects,
+vehicles, evidence, and the surrounding environment.
+
+Use realistic lighting, realistic proportions, natural positioning,
+and a detailed forensic reconstruction style.
+
+Do not add unrelated objects or events that are not supported by
+the scene information.

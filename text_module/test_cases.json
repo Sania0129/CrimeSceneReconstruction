@@ -1,0 +1,24 @@
+{
+    "test_cases": [
+        {
+            "id": 1,
+            "crime": "Bank Theft",
+            "description": "A masked man entered a bank at night carrying a handgun. He threatened the cashier and escaped through the back door."
+        },
+        {
+            "id": 2,
+            "crime": "ATM Theft",
+            "description": "A thief approached an ATM at midnight carrying a handgun. He threatened a security guard, stole cash, and escaped in a car."
+        },
+        {
+            "id": 3,
+            "crime": "Burglary",
+            "description": "A thief broke into a house at midnight through a window. The victim was sleeping inside. The thief stole a laptop and jewelry and escaped."
+        },
+        {
+            "id": 4,
+            "crime": "Murder",
+            "description": "A man killed another person inside a house at night."
+        }
+    ]
+}

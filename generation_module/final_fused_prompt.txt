@@ -1,0 +1,100 @@
+Create a realistic documentary-style forensic
+reconstruction of the described crime scene.
+
+MAIN EVENT
+murder, attack
+
+LOCATION
+shahbad dairy, delhi, building, street
+
+TIME
+night
+
+PEOPLE
+victim, suspect
+
+PHYSICAL OBJECTS
+no specific physical objects identified
+
+ACTIONS
+attack, flee
+
+RELATIONSHIPS
+murder occur night; victim attack altercation; incident occur area; suspect flee attack
+
+FORENSIC EVIDENCE
+no specific forensic evidence identified
+
+SCENE CONDITIONS
+no specific conditions identified
+
+REFERENCE IMAGE CONTEXT
+The uploaded reference image provides the physical
+environment, perspective, architecture, spatial layout
+and compatible visual context.
+
+Objects visible in the reference image:
+person, handbag
+
+Use the reference image as the environmental foundation,
+but reconstruct the scene according to the written crime
+description.
+
+EVENT VISUALIZATION
+
+Show the victim and suspect as the main subjects.
+Place them close enough to clearly communicate a
+confrontation or physical attack.
+
+Use realistic body positioning, facial direction,
+distance, gestures and orientation to make the
+interaction understandable at first glance.
+
+The suspect should be visibly confronting the victim.
+The victim should be clearly distinguishable from
+the suspect.
+
+Keep the depiction non-graphic. Do not show blood,
+gore or explicit injuries unless specifically described
+in the source information.
+
+
+SCENE COMPOSITION
+
+Foreground:
+Clearly show the main people and the main crime event.
+
+Middle ground:
+Show the interaction between people and relevant
+physical objects.
+
+Background:
+Show the surrounding location, buildings, road,
+architecture and environmental context from the
+reference image.
+
+The crime event must remain the visual focus.
+
+STYLE
+
+Realistic forensic reconstruction.
+Documentary photography appearance.
+Natural human proportions.
+Realistic human poses.
+Realistic perspective.
+Natural nighttime lighting where appropriate.
+Detailed Indian residential/environmental setting where
+supported by the location.
+Believable spatial relationships.
+Non-graphic presentation.
+
+Do not create a generic empty environment.
+Do not make scenery more prominent than the crime event.
+Do not invent additional suspects, victims, weapons,
+major events or unsupported evidence.
+Do not treat objects detected only by computer vision
+as confirmed forensic evidence.
+
+The result is an AI-generated visualization based on
+available crime-scene information and is not a verified
+record of what actually happened.

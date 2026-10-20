@@ -1,0 +1,128 @@
+{
+    "description": "“A masked thief entered a bank at night, threAt approximately 7:15 AM, a resident was found unresponsive on the floor of a living room. A small table was overturned, a ceramic vase was broken beside the sofa, and several objects were scattered across the floor. A window was partially open, and a mobile phone lay near the doorway. Investigators documented the positions of the objects, photographed the room from multiple angles, and collected evidence for further examination. The circumstances and cause of death had not yet been established.atened the cashier, stole cash, and escaped through the back door.”",
+    "event": [
+        "theft"
+    ],
+    "time": [
+        "night",
+        "approximately 7:15 am",
+        "15 am",
+        "7:15 am"
+    ],
+    "people": [
+        "thief",
+        "cashier"
+    ],
+    "locations": [
+        "back door",
+        "room",
+        "bank",
+        "mall",
+        "door"
+    ],
+    "objects": [
+        "mobile phone lay",
+        "living room",
+        "small table",
+        "ceramic vase",
+        "multiple angles",
+        "further examination",
+        "resident",
+        "floor",
+        "sofa",
+        "objects",
+        "window",
+        "doorway",
+        "investigators",
+        "positions",
+        "evidence",
+        "circumstances",
+        "cause",
+        "death",
+        "cash",
+        "threat"
+    ],
+    "actions": [
+        "mask",
+        "enter",
+        "find",
+        "overturn",
+        "break",
+        "scatter",
+        "open",
+        "document",
+        "photograph",
+        "collect",
+        "established.atene",
+        "steal",
+        "escape"
+    ],
+    "conditions": [
+        "broken",
+        "open",
+        "scattered",
+        "masked"
+    ],
+    "evidence": [
+        "document",
+        "phone"
+    ],
+    "relationships": [
+        {
+            "action": "enter",
+            "subject": "thief",
+            "object": "night"
+        },
+        {
+            "action": "find",
+            "subject": "resident",
+            "object": "floor"
+        },
+        {
+            "action": "overturn",
+            "subject": "table",
+            "object": null
+        },
+        {
+            "action": "break",
+            "subject": "vase",
+            "object": "sofa"
+        },
+        {
+            "action": "scatter",
+            "subject": "objects",
+            "object": "floor"
+        },
+        {
+            "action": "document",
+            "subject": "investigators",
+            "object": "positions"
+        },
+        {
+            "action": "photograph",
+            "subject": null,
+            "object": "angles"
+        },
+        {
+            "action": "collect",
+            "subject": null,
+            "object": "evidence"
+        },
+        {
+            "action": "established.atene",
+            "subject": "circumstances",
+            "object": "cashier"
+        },
+        {
+            "action": "steal",
+            "subject": null,
+            "object": "cash"
+        },
+        {
+            "action": "escape",
+            "subject": null,
+            "object": "door"
+        }
+    ],
+    "scene_summary": "Event: theft. Location: back door, room, bank, mall, door. Time: night, approximately 7:15 am, 15 am, 7:15 am. People: thief, cashier. Objects: mobile phone lay, living room, small table, ceramic vase, multiple angles, further examination, resident, floor, sofa, objects, window, doorway, investigators, positions, evidence, circumstances, cause, death, cash, threat. Actions: mask, enter, find, overturn, break, scatter, open, document, photograph, collect, established.atene, steal, escape. Conditions: broken, open, scattered, masked. Evidence: document, phone."
+}

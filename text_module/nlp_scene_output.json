@@ -1,0 +1,51 @@
+{
+    "original_description": "A person entered a jewelry store late at night, broke the glass cabinet, took several items, and escaped through the back door.",
+    "sentences": [
+        "A person entered a jewelry store late at night, broke the glass cabinet, took several items, and escaped through the back door."
+    ],
+    "entities": [
+        {
+            "text": "late at night",
+            "label": "TIME"
+        }
+    ],
+    "people": [],
+    "locations": [],
+    "organizations": [],
+    "dates_times": [
+        "late at night"
+    ],
+    "objects": [
+        "jewelry",
+        "store",
+        "night",
+        "glass",
+        "cabinet",
+        "items",
+        "door"
+    ],
+    "actions": [
+        "enter",
+        "break",
+        "take",
+        "escape"
+    ],
+    "relationships": [
+        {
+            "subject_or_object": "person",
+            "action": "enter"
+        },
+        {
+            "subject_or_object": "store",
+            "action": "enter"
+        },
+        {
+            "subject_or_object": "cabinet",
+            "action": "break"
+        },
+        {
+            "subject_or_object": "items",
+            "action": "take"
+        }
+    ]
+}

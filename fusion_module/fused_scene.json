@@ -1,0 +1,214 @@
+{
+    "original_description": "A murder occurred in a public area of Shahbad Dairy, Delhi, at night.\nA young female victim was attacked by a male suspect during an altercation.\nThe incident occurred in a public street area with nearby buildings and people.\nThe suspect fled from the location after the attack.\nPolice later examined the crime scene and collected evidence as part of the investigation.",
+    "scene_summary": "Event: murder, attack. Location: shahbad dairy, delhi, building, street. Time: night. People: victim, suspect. Objects: public street area, public area, nearby buildings, murder, altercation, location, attack, police, evidence, part, investigation, shahbad, dairy, crime. Actions: occur, attack, flee, examine, collect. Conditions: none identified. Evidence: none identified.",
+    "event": [
+        "murder",
+        "attack"
+    ],
+    "time": [
+        "night"
+    ],
+    "people": [
+        "victim",
+        "suspect"
+    ],
+    "locations": [
+        "shahbad dairy",
+        "delhi",
+        "building",
+        "street"
+    ],
+    "actions": [
+        "occur",
+        "attack",
+        "flee",
+        "examine",
+        "collect"
+    ],
+    "conditions": [],
+    "evidence": [],
+    "relationships": [
+        {
+            "action": "occur",
+            "subject": "murder",
+            "object": "night"
+        },
+        {
+            "action": "attack",
+            "subject": "victim",
+            "object": "altercation"
+        },
+        {
+            "action": "occur",
+            "subject": "incident",
+            "object": "area"
+        },
+        {
+            "action": "flee",
+            "subject": "suspect",
+            "object": "attack"
+        },
+        {
+            "action": "examine",
+            "subject": "police",
+            "object": "scene"
+        },
+        {
+            "action": "collect",
+            "subject": null,
+            "object": "part"
+        }
+    ],
+    "text_objects": [
+        "public street area",
+        "public area",
+        "nearby buildings",
+        "murder",
+        "altercation",
+        "location",
+        "attack",
+        "police",
+        "evidence",
+        "part",
+        "investigation",
+        "shahbad",
+        "dairy",
+        "crime"
+    ],
+    "image_objects": [
+        "person",
+        "handbag"
+    ],
+    "common_objects": [],
+    "text_only_objects": [
+        "public street area",
+        "public area",
+        "nearby buildings",
+        "murder",
+        "altercation",
+        "location",
+        "attack",
+        "police",
+        "evidence",
+        "part",
+        "investigation",
+        "shahbad",
+        "dairy",
+        "crime"
+    ],
+    "image_only_objects": [
+        "person",
+        "handbag"
+    ],
+    "visual_context": [
+        {
+            "object": "person",
+            "source": "image",
+            "status": "visual_context_only"
+        },
+        {
+            "object": "handbag",
+            "source": "image",
+            "status": "visual_context_only"
+        }
+    ],
+    "scene_context": {
+        "primary_event": [
+            "murder",
+            "attack"
+        ],
+        "time": [
+            "night"
+        ],
+        "locations": [
+            "shahbad dairy",
+            "delhi",
+            "building",
+            "street"
+        ],
+        "people": [
+            "victim",
+            "suspect"
+        ],
+        "actions": [
+            "occur",
+            "attack",
+            "flee",
+            "examine",
+            "collect"
+        ],
+        "conditions": [],
+        "evidence": [],
+        "relationships": [
+            {
+                "action": "occur",
+                "subject": "murder",
+                "object": "night"
+            },
+            {
+                "action": "attack",
+                "subject": "victim",
+                "object": "altercation"
+            },
+            {
+                "action": "occur",
+                "subject": "incident",
+                "object": "area"
+            },
+            {
+                "action": "flee",
+                "subject": "suspect",
+                "object": "attack"
+            },
+            {
+                "action": "examine",
+                "subject": "police",
+                "object": "scene"
+            },
+            {
+                "action": "collect",
+                "subject": null,
+                "object": "part"
+            }
+        ],
+        "crime_description": "A murder occurred in a public area of Shahbad Dairy, Delhi, at night.\nA young female victim was attacked by a male suspect during an altercation.\nThe incident occurred in a public street area with nearby buildings and people.\nThe suspect fled from the location after the attack.\nPolice later examined the crime scene and collected evidence as part of the investigation.",
+        "described_objects": [
+            "public street area",
+            "public area",
+            "nearby buildings",
+            "murder",
+            "altercation",
+            "location",
+            "attack",
+            "police",
+            "evidence",
+            "part",
+            "investigation",
+            "shahbad",
+            "dairy",
+            "crime"
+        ],
+        "objects_supported_by_image": [],
+        "objects_described_but_not_detected": [
+            "public street area",
+            "public area",
+            "nearby buildings",
+            "murder",
+            "altercation",
+            "location",
+            "attack",
+            "police",
+            "evidence",
+            "part",
+            "investigation",
+            "shahbad",
+            "dairy",
+            "crime"
+        ],
+        "visual_context_objects": [
+            "person",
+            "handbag"
+        ]
+    },
+    "image_name": "tmprnsvz7uq.jpeg"
+}

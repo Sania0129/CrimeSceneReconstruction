@@ -1,0 +1,8 @@
+{
+    "image_name": "test_image.jpg",
+    "detected_objects": [
+        "potted plant",
+        "chair",
+        "vase"
+    ]
+}
