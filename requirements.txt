@@ -1,6 +1,5 @@
 streamlit
-ultralytics
-opencv-python-headless
+ultralytics-opencv-headless
 spacy==3.8.7
 en-core-web-sm==3.8.0
 requests
