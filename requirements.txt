@@ -1,8 +1,8 @@
-
 streamlit
 ultralytics
 opencv-python-headless
-spacy==3.8.7en-core-web-sm==3.8.0
+spacy==3.8.7
+en-core-web-sm==3.8.0
 requests
 Pillow
 numpy
