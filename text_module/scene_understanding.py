@@ -237,77 +237,37 @@ def extract_locations(doc):
 # =====================================================
 
 def extract_actions(doc):
-
-    actions = []
-
-    useful_actions = {
-        "attack",
-        "escape",
-        "enter",
-        "leave",
-        "run",
-        "walk",
-        "drive",
-        "take",
-        "steal",
-        "remove",
-        "break",
-        "damage",
-        "threaten",
-        "demand",
-        "carry",
-        "approach",
-        "capture",
-        "find",
-        "shoot",
-        "kill",
-        "hide",
-        "open",
-        "close",
-        "destroy",
-        "hit",
-        "fight",
-        "rob",
-        "grab",
-        "drop",
-        "wait",
-        "flee",
-        "search",
-        "enter",
-        "exit",
-        "collide",
-        "crash",
-        "fall",
-        "ride",
-        "park",
-        "drive",
-        "approach",
-        "break",
-        "damage",
-        "escape",
-        "threaten",
-        "carry",
-        "steal",
-        "take"
+    text = doc.text.lower()
+    action_patterns = {
+        "enter": ["entered", "enters", "enter"],
+        "threaten": ["threatened", "threatens", "threaten"],
+        "steal": ["stole", "stolen", "stealing", "steal"],
+        "escape": ["escaped", "escapes", "escape"],
+        "break": ["broke", "broken", "breaking", "break"],
+        "carry": ["carried", "carries", "carrying", "carry"],
+        "take": ["took", "taken", "taking", "take"],
+        "attack": ["attacked", "attacks", "attacking"],
+        "shoot": ["shot", "shoots", "shooting"],
+        "kill": ["killed", "kills", "killing"],
+        "open": ["opened", "opens", "opening"],
+        "leave": ["left", "leaves", "leaving"],
+        "run": ["ran", "runs", "running"],
+        "drive": ["drove", "drives", "driving"],
+        "grab": ["grabbed", "grabs", "grabbing"],
+        "demand": ["demanded", "demands", "demanding"],
+        "hide": ["hid", "hidden", "hiding"],
+        "damage": ["damaged", "damages", "damaging"],
+        "rob": ["robbed", "robs", "robbing"],
+        "find": ["found", "finds", "finding"],
+        "wait": ["waited", "waits", "waiting"],
+        "search": ["searched", "searches", "searching"],
     }
 
-    for token in doc:
-
-        # Normal verbs
-        if token.pos_ == "VERB":
-
-            add_unique(
-                actions,
-                token.lemma_
-            )
-
-        # Useful action keywords
-        elif token.lemma_.lower() in useful_actions:
-
-            add_unique(
-                actions,
-                token.lemma_
-            )
+    actions = []
+    for action, forms in action_patterns.items():
+        if any(re.search(r"\b" + re.escape(form) + r"\b", text)
+               for form in forms):
+            add_unique(actions, action)
 
     return actions
 
@@ -315,201 +275,23 @@ def extract_actions(doc):
 # =====================================================
 # OBJECT EXTRACTION
 # =====================================================
+def extract_objects(doc, people, locations, times):
+    object_words = [
+        "handgun", "gun", "knife", "weapon", "pistol", "rifle",
+        "cash", "money", "jewelry", "laptop", "computer", "phone",
+        "bag", "wallet", "car", "truck", "motorcycle", "bicycle",
+        "window", "door", "back door", "front door", "lock",
+        "camera", "cctv", "fingerprint", "blood", "bullet",
+        "shell", "glass", "footprint", "document", "key",
+        "ATM", "cash register", "chair", "table"
+    ]
 
-def extract_objects(
-    doc,
-    people,
-    locations,
-    times
-):
-
+    text = doc.text.lower()
     objects = []
 
-    excluded_words = {
-        "person",
-        "people",
-        "man",
-        "woman",
-        "security",
-        "boy",
-        "girl",
-        "child",
-        "thief",
-        "robber",
-        "suspect",
-        "victim",
-        "criminal",
-        "offender",
-        "driver",
-        "passenger",
-        "guard",
-        "cashier",
-        "shopkeeper",
-        "owner",
-        "employee",
-        "customer",
-        "witness",
-        "officer",
-        "detective",
-        "attacker",
-        "intruder",
-        "burglar",
-        "killer",
-        "hacker",
-        "scene",
-        "incident",
-        "event",
-        "thing",
-        "time",
-        "he",
-        "she",
-        "him",
-        "her",
-        "his",
-        "their",
-        "they",
-        "them"
-    }
-
-    time_words = {
-        "am",
-        "pm",
-        "night",
-        "morning",
-        "afternoon",
-        "evening",
-        "midnight",
-        "noon",
-        "dawn",
-        "dusk"
-    }
-
-    # -------------------------------------------------
-    # Noun phrases
-    # -------------------------------------------------
-
-    phrases = []
-
-    for chunk in doc.noun_chunks:
-
-        phrase = clean_phrase(chunk.text)
-
-        if not phrase:
-            continue
-
-        if phrase in people:
-            continue
-
-        if phrase in locations:
-            continue
-
-        if phrase in times:
-            continue
-
-        words = phrase.split()
-
-        # Ignore phrases consisting only of people/time words
-        if all(
-            word in excluded_words
-            or word in time_words
-            for word in words
-        ):
-            continue
-
-        # Remove phrases that are mainly time expressions
-        if any(
-            word in time_words
-            for word in words
-        ):
-            continue
-
-        add_unique(
-            phrases,
-            phrase
-        )
-
-    # -------------------------------------------------
-    # Clean phrases
-    # -------------------------------------------------
-
-    cleaned_phrases = []
-
-    for phrase in phrases:
-
-        words = phrase.split()
-
-        if any(
-            word in excluded_words
-            for word in words
-        ):
-            continue
-
-        add_unique(
-            cleaned_phrases,
-            phrase
-        )
-
-    # -------------------------------------------------
-    # Prefer descriptive phrases
-    # -------------------------------------------------
-
-    cleaned_phrases.sort(
-        key=lambda x: len(x.split()),
-        reverse=True
-    )
-
-    for phrase in cleaned_phrases:
-
-        already_inside = False
-
-        for existing in objects:
-
-            if phrase in existing:
-                already_inside = True
-                break
-
-        if not already_inside:
-            add_unique(
-                objects,
-                phrase
-            )
-
-    # -------------------------------------------------
-    # Add important individual nouns
-    # -------------------------------------------------
-
-    for token in doc:
-
-        if token.pos_ not in ["NOUN", "PROPN"]:
-            continue
-
-        word = token.text.strip().lower()
-
-        if not word:
-            continue
-
-        if word in excluded_words:
-            continue
-
-        if word in time_words:
-            continue
-
-        if word in people:
-            continue
-
-        if word in locations:
-            continue
-
-        if any(
-            word in phrase.split()
-            for phrase in objects
-        ):
-            continue
-
-        add_unique(
-            objects,
-            word
-        )
+    for word in sorted(object_words, key=len, reverse=True):
+        if re.search(r"\b" + re.escape(word.lower()) + r"\b", text):
+            add_unique(objects, word)
 
     return objects
 
