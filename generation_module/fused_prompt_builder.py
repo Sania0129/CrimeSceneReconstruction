@@ -316,163 +316,130 @@ def create_fused_prompt(scene):
     # EVENT-SPECIFIC VISUAL GUIDANCE
     # =====================================================
 
-    event_lower = event_text.lower()
+    event_lower = (
+        event_text + " " + primary_event
+    ).lower()
 
-    if (
-        "murder" in event_lower
-        or "attack" in event_lower
-        or "assault" in event_lower
-    ):
-
+    if any(word in event_lower for word in [
+        "murder", "homicide", "killing", "attack", "assault"
+    ]):
         event_guidance = """
-Show the victim and suspect as the main subjects.
-Place them close enough to clearly communicate a
-confrontation or physical attack.
-
-Use realistic body positioning, facial direction,
-distance, gestures and orientation to make the
-interaction understandable at first glance.
-
-The suspect should be visibly confronting the victim.
-The victim should be clearly distinguishable from
-the suspect.
-
-Keep the depiction non-graphic. Do not show blood,
-gore or explicit injuries unless specifically described
-in the source information.
+The central subject is the described violent incident.
+Clearly show the victim and suspect, if both are supported
+by the input. Make their positions and interaction visible.
+Show the victim's position and the surrounding scene clearly.
+Use a non-graphic forensic reconstruction. No blood, gore,
+or explicit injuries unless specifically described.
+Do not add extra people or invent an attack in progress
+if the source does not establish it.
 """
 
-    elif (
-        "theft" in event_lower
-        or "robbery" in event_lower
-        or "burglary" in event_lower
-    ):
-
+    elif any(word in event_lower for word in [
+        "theft", "robbery", "burglary", "stealing"
+    ]):
         event_guidance = """
-Show the suspect and the important physical objects
-associated with the theft.
-
-Use body positioning and movement to communicate
-entering, searching, taking property or escaping.
-
-Make the theft activity visually obvious rather than
-showing only an empty environment.
+Make the described theft or burglary the main visual event.
+Show the suspect, relevant property, entry or exit points,
+and the actions supported by the input. Make the incident
+visually clear rather than depicting only the environment.
+Do not invent weapons, extra suspects, or unsupported actions.
 """
 
-    elif "accident" in event_lower or "collision" in event_lower:
-
+    elif any(word in event_lower for word in [
+        "accident", "collision", "crash"
+    ]):
         event_guidance = """
-Show the vehicles involved in the collision clearly.
-
-Use their positions, damage and surrounding road
-environment to communicate that a collision occurred.
-
-Keep the accident realistic and non-graphic.
+Make the described accident the main visual event.
+Clearly show the vehicles or people involved and their
+positions, using only details supported by the input.
+Keep the reconstruction realistic and non-graphic.
 """
 
     else:
-
         event_guidance = """
-Clearly show the people, actions and physical
-relationships described in the crime scene information.
-
-The main event must be visually understandable.
+Make the specific event described in the input the
+main visual focus. Clearly represent the supported people,
+actions, objects, and spatial relationships. Do not replace
+the event with generic scenery.
 """
-
 
     # =====================================================
     # FINAL IMAGE PROMPT
     # =====================================================
 
     prompt = f"""
-Create a realistic documentary-style forensic
-reconstruction of the described crime scene.
+FORENSIC SCENE RECONSTRUCTION — MAIN EVENT FIRST
 
-MAIN EVENT
+Reconstruct this specific incident as a realistic,
+photographic, non-graphic forensic visualization.
+
+CRIME OR INCIDENT:
 {event_text}
 
-LOCATION
+PRIMARY EVENT:
+{primary_event}
+
+LOCATION:
 {location_text}
 
-TIME
+TIME:
 {time_text}
 
-PEOPLE
+PEOPLE:
 {people_text}
 
-PHYSICAL OBJECTS
-{object_text}
-
-ACTIONS
+ACTIONS:
 {action_text}
 
-RELATIONSHIPS
-{relationship_text_final}
+IMPORTANT PHYSICAL OBJECTS:
+{text_objects}
 
-FORENSIC EVIDENCE
+OTHER OBJECTS:
+{common_objects}
+
+FORENSIC EVIDENCE:
 {evidence_text}
 
-SCENE CONDITIONS
+SCENE CONDITIONS:
 {condition_text}
 
-REFERENCE IMAGE CONTEXT
-The uploaded reference image provides the physical
-environment, perspective, architecture, spatial layout
-and compatible visual context.
+PHYSICAL RELATIONSHIPS:
+{relationship_text_final}
 
-Objects visible in the reference image:
+REFERENCE IMAGE OBJECTS:
 {visual_text}
 
-Use the reference image as the environmental foundation,
-but reconstruct the scene according to the written crime
-description.
-
-EVENT VISUALIZATION
+EVENT REQUIREMENTS:
 {event_guidance}
 
-SCENE COMPOSITION
+COMPOSITION:
+Keep the main incident and described people clearly visible.
+Show relevant objects and their positions in relation to
+the people. Include the entrance, exit, and surroundings
+when supported by the input. Keep the environment secondary
+to the main incident.
 
-Foreground:
-Clearly show the main people and the main crime event.
+REFERENCE IMAGE:
+When an image is provided to the generation model, preserve
+its relevant environment, architecture, perspective, and
+spatial layout where possible. Follow the written incident
+description for the event. Do not treat detected objects as
+confirmed evidence or invent events from the image alone.
 
-Middle ground:
-Show the interaction between people and relevant
-physical objects.
+VISUAL STYLE:
+Realistic documentary photography, natural proportions,
+believable poses, clear composition, realistic lighting,
+and a non-graphic forensic presentation.
 
-Background:
-Show the surrounding location, buildings, road,
-architecture and environmental context from the
-reference image.
-
-The crime event must remain the visual focus.
-
-STYLE
-
-Realistic forensic reconstruction.
-Documentary photography appearance.
-Natural human proportions.
-Realistic human poses.
-Realistic perspective.
-Natural nighttime lighting where appropriate.
-Detailed Indian residential/environmental setting where
-supported by the location.
-Believable spatial relationships.
-Non-graphic presentation.
-
-Do not create a generic empty environment.
-Do not make scenery more prominent than the crime event.
-Do not invent additional suspects, victims, weapons,
-major events or unsupported evidence.
-Do not treat objects detected only by computer vision
-as confirmed forensic evidence.
-
-The result is an AI-generated visualization based on
-available crime-scene information and is not a verified
-record of what actually happened.
+STRICT CONSTRAINTS:
+Do not produce generic scenery instead of the incident.
+Do not invent people, weapons, injuries, actions, or evidence.
+Do not show graphic violence. Do not add text or watermarks.
+This is an AI-generated visualization, not verified evidence
+of what actually happened.
 """
 
     return prompt.strip()
-
 
 # =========================================================
 # MAIN PROGRAM
