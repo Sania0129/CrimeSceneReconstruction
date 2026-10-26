@@ -7,7 +7,7 @@ import json
 # LOAD SPACY MODEL
 # =====================================================
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.blank("en")
 
 
 # =====================================================
