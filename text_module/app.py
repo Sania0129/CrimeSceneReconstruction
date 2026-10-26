@@ -42,7 +42,7 @@ from fused_prompt_builder import create_fused_prompt
 # =========================================================
 # FLUX ASYNC API
 # =========================================================
-FLUX_HOST = "https://psychiatry-armstrong-lovers-shelf.trycloudflare.com"
+ FLUX_HOST = "https://reply-seven-remind-stuff.trycloudflare.com"
 
 FLUX_START_URL = FLUX_HOST + "/start"
 
