@@ -285,13 +285,17 @@ def extract_objects(doc, people, locations, times):
         "shell", "glass", "footprint", "document", "key",
         "ATM", "cash register", "chair", "table"
     ]
-
     text = doc.text.lower()
-    objects = []
 
-    for word in sorted(object_words, key=len, reverse=True):
-        if re.search(r"\b" + re.escape(word.lower()) + r"\b", text):
-            add_unique(objects, word)
+    for obj in [
+        "handgun", "gun", "knife", "weapon", "pistol",
+        "cash", "money", "jewelry", "laptop", "phone",
+        "car", "truck", "motorcycle", "window", "door",
+        "back door", "camera", "cctv", "blood", "bullet",
+        "bag", "wallet", "cash register", "fingerprint"
+    ]:
+        if re.search(r"\b" + re.escape(obj) + r"\b", text):
+            add_unique(objects, obj)
 
     return objects
 
