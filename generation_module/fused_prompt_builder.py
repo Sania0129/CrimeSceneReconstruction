@@ -1,17 +1,15 @@
+
 import json
 
 
 def clean_list(items, excluded_terms=None):
-
     if not items:
         return []
 
     excluded_terms = excluded_terms or []
-
     cleaned = []
 
     for item in items:
-
         item = str(item).strip()
 
         if not item:
@@ -20,7 +18,7 @@ def clean_list(items, excluded_terms=None):
         item_lower = item.lower()
 
         if any(
-            excluded in item_lower
+            excluded.lower() in item_lower
             for excluded in excluded_terms
         ):
             continue
@@ -37,52 +35,23 @@ def create_fused_prompt(scene):
     # EXTRACT BASIC SCENE INFORMATION
     # =====================================================
 
-    event = clean_list(
-        scene.get("event", [])
-    )
+    event = clean_list(scene.get("event", []))
+    time = clean_list(scene.get("time", []))
+    people = clean_list(scene.get("people", []))
+    locations = clean_list(scene.get("locations", []))
+    actions = clean_list(scene.get("actions", []))
+    conditions = clean_list(scene.get("conditions", []))
+    evidence = clean_list(scene.get("evidence", []))
 
-    time = clean_list(
-        scene.get("time", [])
-    )
+    relationships = scene.get("relationships", [])
+    scene_context = scene.get("scene_context", {})
+    visual_context = scene.get("visual_context", [])
 
-    people = clean_list(
-        scene.get("people", [])
-    )
-
-    locations = clean_list(
-        scene.get("locations", [])
-    )
-
-    actions = clean_list(
-        scene.get("actions", [])
-    )
-
-    conditions = clean_list(
-        scene.get("conditions", [])
-    )
-
-    evidence = clean_list(
-        scene.get("evidence", [])
-    )
-
-    relationships = scene.get(
-        "relationships",
-        []
-    )
-
-    scene_context = scene.get(
-        "scene_context",
-        {}
-    )
-
-    visual_context = scene.get(
-        "visual_context",
-        []
-    )
-
+    if not isinstance(scene_context, dict):
+        scene_context = {}
 
     # =====================================================
-    # REMOVE NLP NOISE FROM VISUAL OBJECTS
+    # CLEAN OBJECTS FROM TEXT AND IMAGE PROCESSING
     # =====================================================
 
     object_noise = [
@@ -122,26 +91,90 @@ def create_fused_prompt(scene):
         object_noise
     )
 
-
     # =====================================================
-    # VISUAL CONTEXT
+    # EXTRACT OBJECTS AND DETAILS FROM IMAGE CONTEXT
     # =====================================================
 
     visual_objects = []
+    visual_details = []
 
-    for item in visual_context:
+    if isinstance(visual_context, list):
+        for item in visual_context:
 
-        if not isinstance(item, dict):
-            continue
+            if isinstance(item, dict):
+                object_name = item.get("object")
 
-        object_name = item.get("object")
+                if object_name:
+                    object_name = str(object_name).strip()
 
-        if object_name:
-            object_name = str(object_name).strip()
+                    if object_name and object_name not in visual_objects:
+                        visual_objects.append(object_name)
 
-            if object_name and object_name not in visual_objects:
-                visual_objects.append(object_name)
+                # Preserve additional information if available.
+                for key in [
+                    "description",
+                    "position",
+                    "location",
+                    "attributes"
+                ]:
+                    value = item.get(key)
 
+                    if value:
+                        if isinstance(value, (list, dict)):
+                            value = json.dumps(value)
+
+                        visual_details.append(
+                            f"{key}: {value}"
+                        )
+
+            elif isinstance(item, str) and item.strip():
+                visual_objects.append(item.strip())
+
+    visual_objects = clean_list(
+        visual_objects,
+        object_noise
+    )
+
+    visual_details = clean_list(visual_details)
+
+    # =====================================================
+    # COMBINE TEXT AND IMAGE OBJECTS
+    # =====================================================
+
+    combined_objects = clean_list(
+        text_objects
+        + common_objects
+        + text_only_objects
+        + image_only_objects
+        + visual_objects,
+        object_noise
+    )
+
+    combined_objects_text = (
+        ", ".join(combined_objects)
+        if combined_objects
+        else "No specific objects supplied by the processing modules"
+    )
+
+    text_objects_text = (
+        ", ".join(text_objects)
+        if text_objects
+        else "None identified from text"
+    )
+
+    image_objects_text = (
+        ", ".join(
+            clean_list(image_only_objects + visual_objects, object_noise)
+        )
+        if image_only_objects or visual_objects
+        else "None supplied by image processing"
+    )
+
+    visual_details_text = (
+        "; ".join(visual_details)
+        if visual_details
+        else "No additional visual details supplied"
+    )
 
     # =====================================================
     # PRIMARY EVENT
@@ -153,36 +186,21 @@ def create_fused_prompt(scene):
     )
 
     if isinstance(primary_event, list):
-
-        primary_event = clean_list(
-            primary_event
-        )
-
-        primary_event = ", ".join(
-            primary_event
-        )
-
+        primary_event = ", ".join(clean_list(primary_event))
     else:
-
-        primary_event = str(
-            primary_event
-        ).strip()
-
+        primary_event = str(primary_event or "").strip()
 
     if not primary_event:
         primary_event = (
             ", ".join(event)
             if event
-            else "crime scene"
+            else "Crime scene reconstruction"
         )
 
-
     # =====================================================
-    # CORE ACTIONS
+    # ACTIONS
     # =====================================================
 
-    # These actions are useful for understanding the event
-    # but should not dominate the visual generation.
     non_visual_actions = [
         "occur",
         "examine",
@@ -196,182 +214,126 @@ def create_fused_prompt(scene):
         non_visual_actions
     )
 
-
     # =====================================================
     # RELATIONSHIPS
     # =====================================================
 
     relationship_text = []
 
-    for relationship in relationships:
+    if isinstance(relationships, list):
+        for relationship in relationships:
 
-        if not isinstance(
-            relationship,
-            dict
-        ):
-            continue
+            if not isinstance(relationship, dict):
+                continue
 
-        subject = relationship.get(
-            "subject"
-        )
+            subject = relationship.get("subject")
+            action = relationship.get("action")
+            obj = relationship.get("object")
 
-        action = relationship.get(
-            "action"
-        )
+            if not action:
+                continue
 
-        obj = relationship.get(
-            "object"
-        )
+            if str(action).lower() in [
+                "examine",
+                "collect",
+                "investigate"
+            ]:
+                continue
 
-        if not action:
-            continue
-
-        # Ignore administrative/investigative relationships
-        if str(action).lower() in [
-            "examine",
-            "collect",
-            "investigate"
-        ]:
-            continue
-
-        if subject and obj:
-
-            relationship_text.append(
-                f"{subject} {action} {obj}"
-            )
-
-        elif subject:
-
-            relationship_text.append(
-                f"{subject} {action}"
-            )
-
+            if subject and obj:
+                relationship_text.append(
+                    f"{subject} {action} {obj}"
+                )
+            elif subject:
+                relationship_text.append(
+                    f"{subject} {action}"
+                )
 
     # =====================================================
     # FORMATTED VALUES
     # =====================================================
 
-    event_text = (
-        ", ".join(event)
-        if event
-        else primary_event
-    )
-
-    people_text = (
-        ", ".join(people)
-        if people
-        else "people described in the scene"
-    )
-
-    location_text = (
-        ", ".join(locations)
-        if locations
-        else "the described location"
-    )
-
-    time_text = (
-        ", ".join(time)
-        if time
-        else "the described time"
-    )
+    event_text = ", ".join(event) if event else primary_event
+    people_text = ", ".join(people) if people else "Not specified"
+    location_text = ", ".join(locations) if locations else "Not specified"
+    time_text = ", ".join(time) if time else "Not specified"
 
     action_text = (
         ", ".join(visual_actions)
         if visual_actions
-        else "interaction between the described people"
-    )
-
-    object_text = (
-        ", ".join(text_objects)
-        if text_objects
-        else "no specific physical objects identified"
+        else "No specific actions supplied"
     )
 
     evidence_text = (
         ", ".join(evidence)
         if evidence
-        else "no specific forensic evidence identified"
+        else "No specific forensic evidence supplied"
     )
 
     condition_text = (
         ", ".join(conditions)
         if conditions
-        else "no specific conditions identified"
-    )
-
-    visual_text = (
-        ", ".join(visual_objects)
-        if visual_objects
-        else "none"
+        else "No specific scene conditions supplied"
     )
 
     relationship_text_final = (
         "; ".join(relationship_text)
         if relationship_text
-        else "No specific physical relationship identified."
+        else "No explicit physical relationships supplied"
     )
-
 
     # =====================================================
     # EVENT-SPECIFIC VISUAL GUIDANCE
     # =====================================================
 
-    event_lower = (
-        event_text + " " + primary_event
-    ).lower()
+    event_lower = f"{event_text} {primary_event}".lower()
 
     if any(word in event_lower for word in [
         "murder", "homicide", "killing", "attack", "assault"
     ]):
         event_guidance = """
-The central subject is the described violent incident.
-Clearly show the victim and suspect, if both are supported
-by the input. Make their positions and interaction visible.
-Show the victim's position and the surrounding scene clearly.
-Use a non-graphic forensic reconstruction. No blood, gore,
-or explicit injuries unless specifically described.
-Do not add extra people or invent an attack in progress
-if the source does not establish it.
+Show the described incident as the main visual focus.
+Represent people and their positions only when supported by
+the supplied information. Use a non-graphic forensic style.
+Do not invent a suspect, weapon, injury, or attack in progress.
 """
 
     elif any(word in event_lower for word in [
         "theft", "robbery", "burglary", "stealing"
     ]):
         event_guidance = """
-Make the described theft or burglary the main visual event.
-Show the suspect, relevant property, entry or exit points,
-and the actions supported by the input. Make the incident
-visually clear rather than depicting only the environment.
-Do not invent weapons, extra suspects, or unsupported actions.
+Make the described theft or burglary visually clear.
+Show supported actions, relevant property, and entry or exit
+points when specified. Do not invent weapons, extra suspects,
+or unsupported actions.
 """
 
     elif any(word in event_lower for word in [
         "accident", "collision", "crash"
     ]):
         event_guidance = """
-Make the described accident the main visual event.
-Clearly show the vehicles or people involved and their
-positions, using only details supported by the input.
-Keep the reconstruction realistic and non-graphic.
+Clearly represent the described accident and the positions
+of the involved vehicles or people. Do not invent additional
+vehicles, damage, injuries, or events.
 """
 
     else:
         event_guidance = """
-Make the specific event described in the input the
-main visual focus. Clearly represent the supported people,
-actions, objects, and spatial relationships. Do not replace
-the event with generic scenery.
+Make the specified incident the main visual focus.
+Represent supported people, actions, objects, and relationships.
+Do not substitute generic scenery for the described event.
 """
 
     # =====================================================
-    # FINAL IMAGE PROMPT
+    # FINAL FUSED IMAGE PROMPT
     # =====================================================
 
     prompt = f"""
-FORENSIC SCENE RECONSTRUCTION — MAIN EVENT FIRST
+CRIME SCENE RECONSTRUCTION
 
-Reconstruct this specific incident as a realistic,
-photographic, non-graphic forensic visualization.
+TASK:
+Generate a realistic, non-graphic forensic visualization using
+the written incident description and supplied reference image.
 
 CRIME OR INCIDENT:
 {event_text}
@@ -385,17 +347,23 @@ LOCATION:
 TIME:
 {time_text}
 
-PEOPLE:
+PEOPLE FROM TEXT ANALYSIS:
 {people_text}
 
-ACTIONS:
+ACTIONS FROM TEXT ANALYSIS:
 {action_text}
 
-IMPORTANT PHYSICAL OBJECTS:
-{text_objects}
+OBJECTS FROM TEXT ANALYSIS:
+{text_objects_text}
 
-OTHER OBJECTS:
-{common_objects}
+OBJECTS FROM IMAGE ANALYSIS:
+{image_objects_text}
+
+COMBINED OBJECT LIST:
+{combined_objects_text}
+
+ADDITIONAL IMAGE DETAILS:
+{visual_details_text}
 
 FORENSIC EVIDENCE:
 {evidence_text}
@@ -406,95 +374,67 @@ SCENE CONDITIONS:
 PHYSICAL RELATIONSHIPS:
 {relationship_text_final}
 
-REFERENCE IMAGE OBJECTS:
-{visual_text}
-
 EVENT REQUIREMENTS:
 {event_guidance}
 
-COMPOSITION:
-Keep the main incident and described people clearly visible.
-Show relevant objects and their positions in relation to
-the people. Include the entrance, exit, and surroundings
-when supported by the input. Keep the environment secondary
-to the main incident.
+REFERENCE IMAGE INSTRUCTIONS:
+Use the uploaded photograph as the visual starting point.
+Preserve its recognizable environment, architecture,
+background, perspective, and major spatial layout where possible.
 
-REFERENCE IMAGE:
-When an image is provided to the generation model, preserve
-its relevant environment, architecture, perspective, and
-spatial layout where possible. Follow the written incident
-description for the event. Do not treat detected objects as
-confirmed evidence or invent events from the image alone.
+Use the written incident description to guide the changes
+needed to represent the described event.
+
+Retain relevant objects visible in the original image when
+possible. Do not treat an object's presence as proof that it
+was involved in the crime.
+
+Do not force objects from the text into the scene if doing so
+would contradict the supplied photograph. Represent important
+described objects where visually plausible.
+
+COMPOSITION:
+Keep the main incident and relevant people visible.
+Show meaningful spatial relationships between people and objects.
+Include entry and exit points when supported by the inputs.
+Avoid replacing the incident with generic scenery.
 
 VISUAL STYLE:
-Realistic documentary photography, natural proportions,
-believable poses, clear composition, realistic lighting,
-and a non-graphic forensic presentation.
+Photorealistic documentary photography, realistic proportions,
+believable poses, natural lighting, and clear composition.
+Non-graphic forensic presentation.
 
 STRICT CONSTRAINTS:
-Do not produce generic scenery instead of the incident.
-Do not invent people, weapons, injuries, actions, or evidence.
-Do not show graphic violence. Do not add text or watermarks.
-This is an AI-generated visualization, not verified evidence
-of what actually happened.
+Do not invent unsupported people, weapons, injuries, actions,
+or evidence. Do not add text or watermarks.
+This is an AI-generated visualization, not verified evidence.
 """
 
     return prompt.strip()
 
-# =========================================================
+
+# =====================================================
 # MAIN PROGRAM
-# =========================================================
+# =====================================================
 
 if __name__ == "__main__":
 
-    with open(
-        "../fusion_module/fused_scene.json",
-        "r"
-    ) as file:
+    input_path = "../fusion_module/fused_scene.json"
 
+    with open(input_path, "r", encoding="utf-8") as file:
         fused_scene = json.load(file)
 
+    final_prompt = create_fused_prompt(fused_scene)
 
-    final_prompt = create_fused_prompt(
-        fused_scene
-    )
-
-
-    print(
-        "\n=========================================="
-    )
-
-    print(
-        "          CLEAN FLUX PROMPT"
-    )
-
-    print(
-        "=========================================="
-    )
-
+    print("\n==========================================")
+    print("          CLEAN FUSED FLUX PROMPT")
+    print("==========================================\n")
     print(final_prompt)
 
+    output_path = "final_fused_prompt.txt"
 
-    with open(
-        "final_fused_prompt.txt",
-        "w"
-    ) as file:
-
+    with open(output_path, "w", encoding="utf-8") as file:
         file.write(final_prompt)
 
-
-    print(
-        "\nPrompt saved to final_fused_prompt.txt"
-    )
-
-    print(
-        "\n=========================================="
-    )
-
-    print(
-        "       PROMPT BUILDER COMPLETED"
-    )
-
-    print(
-        "=========================================="
-    )
+    print(f"\nPrompt saved to {output_path}")
+    print("\nPROMPT BUILDER COMPLETED")
